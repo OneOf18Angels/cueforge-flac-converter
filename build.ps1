@@ -7,7 +7,7 @@ py -m PyInstaller `
     --clean `
     --noconfirm `
     --onefile `
-    --windowed `
+    --console `
     --name flac-converter `
     --add-binary "$ffmpeg;." `
     --collect-all rich `

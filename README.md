@@ -92,7 +92,7 @@ dist\flac-converter.exe
 dist\flac-converter-cli.exe
 ```
 
-Запуск GUI без консолі:
+Запуск GUI зі згорнутою консоллю:
 
 ```powershell
 .\dist\flac-converter.exe
@@ -100,7 +100,7 @@ dist\flac-converter-cli.exe
 
 ### CLI з EXE
 
-CLI-версія має консольне вікно та показує progress bar у терміналі:
+CLI-версія має консольне вікно та показує progress bar у терміналі. GUI-версія також стартує з технічною консоллю, але одразу автоматично її згортає.
 
 ```powershell
 .\dist\flac-converter-cli.exe "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
