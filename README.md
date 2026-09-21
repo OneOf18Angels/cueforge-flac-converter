@@ -73,7 +73,7 @@ CLI залишається доступним для автоматизації 
 
 ## Збірка EXE
 
-Для створення GUI та CLI Windows-файлів встановіть PyInstaller:
+Для створення Windows-файлу встановіть PyInstaller:
 
 ```powershell
 py -m pip install pyinstaller
@@ -85,11 +85,10 @@ py -m pip install pyinstaller
 .\build.ps1
 ```
 
-Файли буде створено тут:
+Файл буде створено тут:
 
 ```text
 dist\flac-converter.exe
-dist\flac-converter-cli.exe
 ```
 
 Запуск GUI зі згорнутою консоллю:
@@ -100,19 +99,13 @@ dist\flac-converter-cli.exe
 
 ### CLI з EXE
 
-CLI-версія має консольне вікно та показує progress bar у терміналі. GUI-версія також стартує з технічною консоллю, але одразу автоматично її згортає.
+Той самий EXE підтримує CLI та показує progress bar у терміналі, якщо передати аргументи:
 
 ```powershell
-.\dist\flac-converter-cli.exe "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
+.\dist\flac-converter.exe "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
 ```
 
-Для CLI-запуску через Python використовуйте:
-
-```powershell
-py .\convert.py "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
-```
-
-CLI-параметри для `flac-converter-cli.exe` такі самі: `source`, `dest`, `--workers`, `--logs`.
+Без аргументів цей самий EXE запускає GUI. З аргументами `source` і `dest` він працює як CLI.
 
 `ffmpeg.exe` вбудовується в EXE автоматично.
 
