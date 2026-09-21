@@ -31,9 +31,13 @@ if getattr(sys, "frozen", False):
 
 if os.name == "nt":
     _popen = subprocess.Popen
+    _startup_info = subprocess.STARTUPINFO()
+    _startup_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    _startup_info.wShowWindow = subprocess.SW_HIDE
 
     def popen_without_console(*args, **kwargs):
         kwargs.setdefault("creationflags", subprocess.CREATE_NO_WINDOW)
+        kwargs.setdefault("startupinfo", _startup_info)
         return _popen(*args, **kwargs)
 
     subprocess.Popen = popen_without_console
