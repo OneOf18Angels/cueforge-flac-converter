@@ -97,6 +97,12 @@ dist\flac-converter.exe
 .\dist\flac-converter.exe
 ```
 
+GUI-версія зібрана без консольного вікна. Для CLI-запуску з текстовим виводом використовуйте Python-скрипт:
+
+```powershell
+py .\convert.py "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
+```
+
 ### CLI з EXE
 
 Якщо передати параметри `source` і `dest`, `.exe` працює в консольному режимі без GUI.
