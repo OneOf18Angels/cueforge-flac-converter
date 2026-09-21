@@ -243,19 +243,27 @@ class ConverterApp(tk.Tk):
         return value
 
     def choose_source(self):
-        path = filedialog.askdirectory(title="Source папка")
+        path = self.choose_directory(self.source, "Source папка")
         if path:
             self.source.set(path)
 
     def choose_dest(self):
-        path = filedialog.askdirectory(title="Destination папка")
+        path = self.choose_directory(self.dest, "Destination папка")
         if path:
             self.dest.set(path)
 
     def choose_logs(self):
-        path = filedialog.askdirectory(title="Папка логів")
+        path = self.choose_directory(self.logs, "Папка логів")
         if path:
             self.logs.set(path)
+
+    @staticmethod
+    def choose_directory(variable, title):
+        current_path = variable.get().strip()
+        if current_path and not os.path.isabs(current_path):
+            current_path = os.path.join(app_dir(), current_path)
+        initial_dir = current_path if os.path.isdir(current_path) else "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
+        return filedialog.askdirectory(title=title, initialdir=initial_dir)
 
     def open_log_viewer(self):
         LogViewer(self, self.logs.get().strip() or "logs")
