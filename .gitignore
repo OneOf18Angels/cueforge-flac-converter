@@ -1,0 +1,21 @@
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# PyInstaller/build artifacts
+build/
+dist/
+*.spec
+
+# Runtime configuration and logs
+config.json
+logs/
+*.log
+
+# Local temporary files
+*.tmp
+*.bak
+.DS_Store
