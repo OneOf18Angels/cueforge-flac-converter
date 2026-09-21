@@ -29,6 +29,16 @@ if getattr(sys, "frozen", False):
     AudioSegment.converter = os.path.join(sys._MEIPASS, "ffmpeg.exe")
 
 
+if os.name == "nt":
+    _popen = subprocess.Popen
+
+    def popen_without_console(*args, **kwargs):
+        kwargs.setdefault("creationflags", subprocess.CREATE_NO_WINDOW)
+        return _popen(*args, **kwargs)
+
+    subprocess.Popen = popen_without_console
+
+
 def app_dir():
     if getattr(sys, "frozen", False):
         return os.path.dirname(sys.executable)
