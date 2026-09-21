@@ -73,7 +73,7 @@ CLI залишається доступним для автоматизації 
 
 ## Збірка EXE
 
-Для створення одного Windows-файлу встановіть PyInstaller:
+Для створення GUI та CLI Windows-файлів встановіть PyInstaller:
 
 ```powershell
 py -m pip install pyinstaller
@@ -85,45 +85,34 @@ py -m pip install pyinstaller
 .\build.ps1
 ```
 
-Готовий файл буде створено тут:
+Файли буде створено тут:
 
 ```text
 dist\flac-converter.exe
+dist\flac-converter-cli.exe
 ```
 
-Запуск GUI:
+Запуск GUI без консолі:
 
 ```powershell
 .\dist\flac-converter.exe
 ```
 
-GUI-версія зібрана без консольного вікна. Для CLI-запуску з текстовим виводом використовуйте Python-скрипт:
+### CLI з EXE
+
+CLI-версія має консольне вікно та показує progress bar у терміналі:
+
+```powershell
+.\dist\flac-converter-cli.exe "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
+```
+
+Для CLI-запуску через Python використовуйте:
 
 ```powershell
 py .\convert.py "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
 ```
 
-### CLI з EXE
-
-Якщо передати параметри `source` і `dest`, `.exe` працює в консольному режимі без GUI.
-
-Синтаксис:
-
-```powershell
-.\dist\flac-converter.exe <source> <dest> [--workers КІЛЬКІСТЬ] [--logs ПАПКА_ЛОГІВ]
-```
-
-Приклад:
-
-```powershell
-\.\dist\flac-converter.exe "X:\complete\A-ha - Full Albums Discography" "Z:\new\songs\A-ha" --workers 4
-```
-
-Тут:
-
-- `X:\complete\A-ha - Full Albums Discography` — `source`;
-- `Z:\new\songs\A-ha` — `dest`;
-- `--workers 4` — максимум чотири одночасні потоки.
+CLI-параметри для `flac-converter-cli.exe` такі самі: `source`, `dest`, `--workers`, `--logs`.
 
 `ffmpeg.exe` вбудовується в EXE автоматично.
 
