@@ -11,6 +11,7 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from cueparser import CueSheet
+from mutagen.flac import FLAC
 from pydub import AudioSegment
 from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn, TimeRemainingColumn
 from rich.markup import escape
@@ -122,6 +123,26 @@ def read_cue_file(cue_path):
     raise UnicodeDecodeError("utf-8", data, 0, 1, "unsupported CUE file encoding")
 
 
+def track_metadata(track, cue, album_name):
+    title = track.title or f"Track {track.number}"
+    performer = track.performer or cue.performer or "Unknown"
+    album_artist = cue.performer or performer
+    album_title = cue.title or album_name
+    return {
+        "title": title,
+        "artist": performer,
+        "album": album_title,
+        "album_artist": album_artist,
+        "tracknumber": str(track.number),
+    }
+
+
+def update_flac_metadata(path, metadata):
+    audio = FLAC(path)
+    audio.update(metadata)
+    audio.save()
+
+
 def convert_album(album_path, dest_album, progress, task_id):
     album_name = os.path.basename(album_path)
     album_log(album_name, "Початок: %s", album_path)
@@ -168,6 +189,13 @@ def convert_album(album_path, dest_album, progress, task_id):
 
     # Пропуск, якщо вже є FLAC
     if sum(f.lower().endswith(".flac") for f in os.listdir(dest_album)) >= len(cue.tracks):
+        for track in cue.tracks:
+            metadata = track_metadata(track, cue, album_name)
+            filename = safe_filename(f"{metadata['artist']} - {track.number:02d} {metadata['title']}.flac")
+            dest_file = os.path.join(dest_album, filename)
+            if os.path.isfile(dest_file):
+                update_flac_metadata(dest_file, metadata)
+                album_log(album_name, "Metadata оновлено: %s", dest_file)
         album_log(album_name, "Пропущено, FLAC вже існують")
         finish_album(
             progress,
@@ -180,8 +208,9 @@ def convert_album(album_path, dest_album, progress, task_id):
         return
 
     for track in cue.tracks:
-        title = track.title or f"Track {track.number}"
-        performer = track.performer or cue.performer or "Unknown"
+        metadata = track_metadata(track, cue, album_name)
+        title = metadata["title"]
+        performer = metadata["artist"]
 
         start = cue_time_to_seconds(track.offset)
         end = None
@@ -201,7 +230,11 @@ def convert_album(album_path, dest_album, progress, task_id):
         filename = safe_filename(f"{performer} - {track.number:02d} {title}.flac")
         dest_file = os.path.join(dest_album, filename)
 
-        segment.export(dest_file, format="flac")
+        segment.export(
+            dest_file,
+            format="flac",
+            tags=metadata,
+        )
         album_log(album_name, "Трек готовий: %s", dest_file)
         update_album(progress, task_id, "running", album_name, completed=track.number)
 

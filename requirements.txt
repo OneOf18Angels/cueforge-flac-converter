@@ -2,3 +2,4 @@ pydub==0.25.1
 audioop-lts==0.2.2
 CueParser==1.3.3
 rich==14.1.0
+mutagen==1.47.0
